@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <title>RPG</title>
+        <style>
+            #player{
+                width: 64px;
+                height: 64px;
+                position: absolute;
+                left: 0px;
+                top: 0px
+            }
+        </style>
+    </head>
+    <body>
+        <div id = "game">
+
+        </div>
+        <img id = "player" src = "人5.png">
+        <script>
+        // let ua = navigator.userAgent.toLowerCase(); 
+        // if (ua.indexOf("edg") !== -1) {
+            let player  =document.getElementById("player");
+            let backup = [];
+            let player_x = 0;
+            let player_y = 0;
+            player.style.left = "0px";
+            player.style.top = "0px";
+            document.addEventListener('keydown', function(event) {
+                    console.log('押されたキーのキー:', event.key);
+                    if (event.key === 'ArrowLeft' &&  backup[player_y / 64][(player_x -64) / 64].stand) {
+                        player_x -= 64;
+                        console.log("left");
+                    }
+                    if (event.key === "ArrowRight" &&  backup[player_y / 64][(player_x + 64) / 64].stand){
+                        player_x += 64;
+                        console.log("right");
+                    }
+                    if (event.key === "ArrowUp" &&  backup[(player_y - 64) / 64][player_x / 64].stand){
+                        player_y -= 64;
+                        console.log("up");
+                    }
+                    if (event.key === "ArrowDown" &&  backup[(player_y + 64) / 64][player_x / 64].stand){
+                        player_y += 64;
+                        console.log("down");
+                    }
+            });
+            function player_move(){
+                player.style.left = player_x + "px";
+                player.style.top = player_y + "px";
+            }
+            let npc_ListA = [
+                {"name": "人1.png","x": 128, "y": 128},
+            ];
+            let stageA =
+                [
+                    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,2,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+                ];
+            let img_listA = [
+                {"name": "草.png", "stand": true},
+                {"name":"海.png", "stand": false},
+                {"name": "草.png", "stand": false},
+            ];
+            let npc;
+            const game = document.getElementById("game");
+            function stage_generator(stage_num_list,png_str,npc_list){ 
+                backup = stage_num_list;
+                for(let i=0; i < stage_num_list.length; i++){
+                    for(let j=0; j < stage_num_list[i].length; j++){
+                        stage_num_list[i][j] = img_listA[stage_num_list[i][j]];
+                        game.innerHTML += `<img src="${stage_num_list[i][j].name}" style="width: 64px; height: 64px; position: absolute; left: ${j * 64}px; top: ${i * 64}px;">`;
+                    }
+                }
+                for(let i = 0; i < npc_list.length; i++){
+                    npc = document.createElement("img");
+                    npc.src = npc_list[i].name;
+                    npc.style.width = "64px";
+                    npc.style.height = "64px";
+                    npc.style.position = "absolute";
+                    npc.style.left = npc_list[i].x + "px";
+                    npc.style.top = npc_list[i].y + "px";
+                    game.appendChild(npc)
+                }
+            }
+            
+            stage_generator(stageA,img_listA,npc_ListA);
+
+            let intervalID = setInterval(player_move, 16);
+        // }
+        </script>
+    </body>
+</html>
